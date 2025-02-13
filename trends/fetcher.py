@@ -23,7 +23,7 @@ def save_to_csv(df, filename="trends_output.csv"):
     print(f"Data saved to {filename}")
 
 if __name__ == "__main__":
-    keywords = ["AI", "Machine Learning"]
+    keywords = ["cat", "dog", "bird"]
     df = fetch_trends(keywords)
     if not df.empty:
         print(df.head())
