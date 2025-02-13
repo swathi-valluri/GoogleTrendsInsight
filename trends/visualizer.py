@@ -51,3 +51,22 @@ def plot_bar_chart(df, keywords, filename="bar_chart.png"):
     plt.savefig(image_path)
     print(f"Bar chart saved as: {image_path}")
     plt.close()
+
+def plot_heatmap(df, keywords, filename="heatmap.png"):
+    """Generates and saves a heatmap for regional interest."""
+    if df.empty:
+        print("No data available for heatmap.")
+        return
+
+    plt.figure(figsize=(12, 6))
+    sns.heatmap(df, cmap="coolwarm", annot=True, fmt=".0f", linewidths=0.5)
+
+    plt.xlabel("Keywords")
+    plt.ylabel("Region")
+    plt.title("Google Trends Regional Interest")
+
+    # Save the heatmap
+    image_path = os.path.join(OUTPUT_FOLDER, filename)
+    plt.savefig(image_path)
+    print(f"Heatmap saved as: {image_path}")
+    plt.close()

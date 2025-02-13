@@ -1,6 +1,5 @@
 # GoogleTrendsInsight
 
-
 ## Overview
 GoogleTrendsInsight is an open-source tool for visualizing Google Trends data with interactive charts and CSV export functionality. It helps users analyze keyword trends over time, compare multiple search terms, and gain insights into search interest across different regions.
 
@@ -11,6 +10,8 @@ GoogleTrendsInsight is an open-source tool for visualizing Google Trends data wi
 - Export trend data as CSV for further analysis
 - Simple CLI for quick analysis
 - Web interface for interactive data exploration (Planned)
+- Heatmap visualization for regional interest
+- Request throttling to prevent API rate-limiting
 
 ## Installation
 
@@ -31,9 +32,9 @@ GoogleTrendsInsight is an open-source tool for visualizing Google Trends data wi
 
 ## Usage
 
-### CLI Usage (Initial Version)
+### CLI Usage
 ```sh
-python main.py --keywords "machine learning, AI, blockchain" --timeframe "today 12-m"
+python main.py --keywords "machine learning, AI, blockchain" --timeframe "today 12-m" --output "output.csv" --visualize --heatmap --geo "US"
 ```
 
 ### Web UI (Planned)
@@ -41,11 +42,13 @@ python main.py --keywords "machine learning, AI, blockchain" --timeframe "today 
 2. Access the web interface via `http://localhost:5000`
 
 ## Roadmap
-- [ ] Implement CLI for fetching Google Trends data
-- [ ] Add CSV export functionality
-- [ ] Build visualization modules for trend insights
-- [ ] Develop a web-based UI for interactive analysis
+- [X] Implement CLI for fetching Google Trends data
+- [X] Add CSV export functionality
+- [X] Build visualization modules for trend insights
+- [X] Develop heatmap visualization for regional interest
+- [ ] Implement a web-based UI for interactive analysis
 - [ ] Deploy as a Docker container
+
 
 ## Contributing
 Contributions are welcome! Feel free to fork the repository and submit pull requests.
@@ -53,4 +56,3 @@ Contributions are welcome! Feel free to fork the repository and submit pull requ
 ## License
 This project is licensed under the MIT License.
 
- 

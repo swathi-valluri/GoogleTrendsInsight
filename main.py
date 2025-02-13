@@ -1,8 +1,8 @@
 import argparse
 import os
 from datetime import datetime
-from trends.fetcher import fetch_trends, save_to_csv
-from trends.visualizer import plot_trends, plot_bar_chart
+from trends import fetcher  # Corrected import
+from trends.visualizer import plot_trends, plot_bar_chart, plot_heatmap
 
 def main():
     parser = argparse.ArgumentParser(description="Fetch and visualize Google Trends data.")
@@ -23,15 +23,23 @@ def main():
         "--visualize", action="store_true",
         help="Enable visualization and save as image files"
     )
+    parser.add_argument(
+        "--heatmap", action="store_true",
+        help="Generate and save a heatmap for regional interest"
+    )
+    parser.add_argument(
+        "--geo", type=str, default="",
+        help="Specify country code for regional analysis (e.g., 'US', 'IN', 'GB')"
+    )
 
     args = parser.parse_args()
     
     keywords = [kw.strip() for kw in args.keywords.split(",")]
-    df = fetch_trends(keywords, timeframe=args.timeframe)
+    df = fetcher.fetch_trends(keywords, timeframe=args.timeframe)
 
     if not df.empty:
         print(df.head())
-        save_to_csv(df, args.output)
+        fetcher.save_to_csv(df, args.output)
 
         if args.visualize:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -40,6 +48,12 @@ def main():
             
             plot_trends(df, keywords, filename=line_chart_filename)
             plot_bar_chart(df, keywords, filename=bar_chart_filename)
+
+    if args.heatmap:
+        regional_df = fetcher.fetch_regional_interest(keywords, geo=args.geo)
+        if not regional_df.empty:
+            heatmap_filename = f"heatmap_{timestamp}.png"
+            plot_heatmap(regional_df, keywords, filename=heatmap_filename)
 
 if __name__ == "__main__":
     main()
