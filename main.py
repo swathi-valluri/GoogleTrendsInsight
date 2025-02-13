@@ -1,7 +1,5 @@
 import argparse
-import os
-from datetime import datetime
-from trends import fetcher  # Corrected import
+from trends import fetcher
 from trends.visualizer import plot_trends, plot_bar_chart, plot_heatmap
 
 def main():
@@ -17,7 +15,7 @@ def main():
     )
     parser.add_argument(
         "--output", type=str, default="trends_output.csv",
-        help="Output filename for CSV (default: trends_output.csv)"
+        help="Output filename for CSV or JSON (default: trends_output.csv)"
     )
     parser.add_argument(
         "--visualize", action="store_true",
@@ -39,7 +37,7 @@ def main():
 
     if not df.empty:
         print(df.head())
-        fetcher.save_to_csv(df, args.output)
+        fetcher.save_to_file(df, args.output)  # Now saves both CSV & JSON
 
         if args.visualize:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
