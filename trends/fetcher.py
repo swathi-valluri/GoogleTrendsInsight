@@ -30,7 +30,7 @@ def fetch_trends(keywords, timeframe="today 12-m", geo=""):
     
     session = create_session()
     pytrends = TrendReq(hl='en-US', tz=360)
-    pytrends.requests = session
+    pytrends.requests = session  # Assign session manually
 
     for attempt in range(1, MAX_RETRIES + 1):
         try:
@@ -43,14 +43,44 @@ def fetch_trends(keywords, timeframe="today 12-m", geo=""):
 
             if not df.empty:
                 df = df.drop(columns=["isPartial"], errors="ignore")
-                df = df.infer_objects(copy=False)
+                df = df.infer_objects(copy=False)  # Ensure correct data types
             return df
 
         except Exception as e:
             print(f"⚠️ Error fetching trends (Attempt {attempt}/{MAX_RETRIES}): {e}")
             time.sleep(2 ** attempt)
-    
+
     print("❌ Failed to fetch trends after multiple attempts.")
+    return pd.DataFrame()
+
+def fetch_regional_interest(keywords, geo=""):
+    """Fetches Google Trends interest by region with rate limiting."""
+    if len(keywords) > MAX_KEYWORDS:
+        print(f"⚠️ Too many keywords! Reduce to {MAX_KEYWORDS} or fewer.")
+        return pd.DataFrame()
+    
+    session = create_session()
+    pytrends = TrendReq(hl='en-US', tz=360)
+    pytrends.requests = session  # Assign session manually
+
+    for attempt in range(1, MAX_RETRIES + 1):
+        try:
+            sleep_time = random.uniform(5, 15)
+            print(f"🕒 Waiting {sleep_time:.2f} seconds before regional data request (Attempt {attempt})...")
+            time.sleep(sleep_time)
+
+            pytrends.build_payload(keywords, geo=geo)
+            df = pytrends.interest_by_region()
+
+            if not df.empty:
+                df = df.infer_objects(copy=False)  # Fix FutureWarning
+            return df
+
+        except Exception as e:
+            print(f"⚠️ Error fetching regional interest (Attempt {attempt}/{MAX_RETRIES}): {e}")
+            time.sleep(2 ** attempt)
+
+    print("❌ Failed to fetch regional interest after multiple attempts.")
     return pd.DataFrame()
 
 def save_to_file(df, filename="trends_output"):
