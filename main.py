@@ -1,8 +1,11 @@
 import argparse
+import os
+from datetime import datetime
 from trends.fetcher import fetch_trends, save_to_csv
+from trends.visualizer import plot_trends
 
 def main():
-    parser = argparse.ArgumentParser(description="Fetch Google Trends data and save as CSV.")
+    parser = argparse.ArgumentParser(description="Fetch and visualize Google Trends data.")
     
     parser.add_argument(
         "--keywords", type=str, required=True,
@@ -16,6 +19,10 @@ def main():
         "--output", type=str, default="trends_output.csv",
         help="Output filename for CSV (default: trends_output.csv)"
     )
+    parser.add_argument(
+        "--visualize", action="store_true",
+        help="Enable visualization and save as an image file"
+    )
 
     args = parser.parse_args()
     
@@ -25,6 +32,11 @@ def main():
     if not df.empty:
         print(df.head())
         save_to_csv(df, args.output)
+
+        if args.visualize:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            image_filename = f"trend_{timestamp}.png"
+            plot_trends(df, keywords, filename=image_filename)
 
 if __name__ == "__main__":
     main()
