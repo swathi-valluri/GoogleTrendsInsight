@@ -2,7 +2,7 @@ import argparse
 import os
 from datetime import datetime
 from trends.fetcher import fetch_trends, save_to_csv
-from trends.visualizer import plot_trends
+from trends.visualizer import plot_trends, plot_bar_chart
 
 def main():
     parser = argparse.ArgumentParser(description="Fetch and visualize Google Trends data.")
@@ -21,7 +21,7 @@ def main():
     )
     parser.add_argument(
         "--visualize", action="store_true",
-        help="Enable visualization and save as an image file"
+        help="Enable visualization and save as image files"
     )
 
     args = parser.parse_args()
@@ -35,8 +35,11 @@ def main():
 
         if args.visualize:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            image_filename = f"trend_{timestamp}.png"
-            plot_trends(df, keywords, filename=image_filename)
+            line_chart_filename = f"trend_{timestamp}.png"
+            bar_chart_filename = f"bar_chart_{timestamp}.png"
+            
+            plot_trends(df, keywords, filename=line_chart_filename)
+            plot_bar_chart(df, keywords, filename=bar_chart_filename)
 
 if __name__ == "__main__":
     main()
