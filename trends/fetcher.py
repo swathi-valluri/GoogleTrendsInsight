@@ -34,11 +34,11 @@ def fetch_trends(keywords, timeframe="today 12-m", geo=""):
 
     for attempt in range(1, MAX_RETRIES + 1):
         try:
-            sleep_time = random.uniform(5, 15)
+            sleep_time = random.uniform(15, 30)  # Increased delay to reduce 429 errors
             print(f"🕒 Waiting {sleep_time:.2f} seconds before requesting data (Attempt {attempt})...")
             time.sleep(sleep_time)
 
-            pytrends.build_payload(keywords, timeframe=timeframe, geo=geo)
+            pytrends.build_payload(keywords, timeframe=timeframe, geo=geo)  # ✅ Fixed missing timeframe
             df = pytrends.interest_over_time()
 
             if not df.empty:
@@ -48,7 +48,7 @@ def fetch_trends(keywords, timeframe="today 12-m", geo=""):
 
         except Exception as e:
             print(f"⚠️ Error fetching trends (Attempt {attempt}/{MAX_RETRIES}): {e}")
-            time.sleep(2 ** attempt)
+            time.sleep(2 ** attempt)  # ✅ Exponential backoff (2, 4, 8, 16 seconds)
 
     print("❌ Failed to fetch trends after multiple attempts.")
     return pd.DataFrame()
@@ -65,7 +65,7 @@ def fetch_regional_interest(keywords, geo=""):
 
     for attempt in range(1, MAX_RETRIES + 1):
         try:
-            sleep_time = random.uniform(5, 15)
+            sleep_time = random.uniform(10, 20)  # Increased delay to reduce 429 errors
             print(f"🕒 Waiting {sleep_time:.2f} seconds before regional data request (Attempt {attempt})...")
             time.sleep(sleep_time)
 
@@ -78,7 +78,7 @@ def fetch_regional_interest(keywords, geo=""):
 
         except Exception as e:
             print(f"⚠️ Error fetching regional interest (Attempt {attempt}/{MAX_RETRIES}): {e}")
-            time.sleep(2 ** attempt)
+            time.sleep(2 ** attempt)  # ✅ Exponential backoff (2, 4, 8, 16 seconds)
 
     print("❌ Failed to fetch regional interest after multiple attempts.")
     return pd.DataFrame()

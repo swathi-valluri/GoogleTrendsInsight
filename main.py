@@ -1,6 +1,8 @@
+
 import argparse
 from trends import fetcher
 from trends.visualizer import plot_trends, plot_bar_chart, plot_heatmap
+from datetime import datetime
 
 def main():
     parser = argparse.ArgumentParser(description="Fetch and visualize Google Trends data.")
